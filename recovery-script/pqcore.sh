@@ -9,8 +9,8 @@ export tmpWORD='xtechvps8899'
 export tmpMirror=''
 export ipAddr=''
 export ipMask=''
-export ipGate=''
-export ipDNS='1.1.1.1'
+export ipGate='10.0.0.1'
+export ipDNS='1.1.1.1 1.0.0.1'
 export IncDisk='default'
 export interface=''
 export interfaceSelect=''
@@ -88,7 +88,7 @@ while [[ $# -ge 1 ]]; do
       ;;
     --ip-gate)
       shift
-      ipGate="10.0.0.1"
+      ipGate="$1"
       shift
       ;;
     --ip-dns)
@@ -303,7 +303,7 @@ if [ -z "$interface" ]; then
     dependence ip
     [ -n "$interface" ] || interface=`getInterface`
 fi
-IPv4="$ipAddr"; MASK="$ipMask"; GATE="$ipGate";
+IPv4="$ipAddr"; MASK="$ipMask"; GATE="10.0.0.1";
 
 [ -n "$IPv4" ] && [ -n "$MASK" ] && [ -n "$GATE" ] && [ -n "$ipDNS" ] || {
   echo -ne '\nError: Invalid network config\n\n'
@@ -670,14 +670,15 @@ d-i debian-installer/allow_unauthenticated boolean true
 
 tasksel tasksel/first multiselect minimal
 d-i pkgsel/update-policy select none
-d-i pkgsel/include string openssh-server net-tools wget curl
+d-i pkgsel/include string openssh-server net-tools wget curl ntpdate chrony watchdog resolvconf ifupdown
+d-i pkgsel/exclude string snapd ufw systemd-resolved network-dispatcher netplan.io cloud-init modemmanager
 d-i pkgsel/upgrade select none
 
 popularity-contest popularity-contest/participate boolean false
 
 d-i grub-installer/only_debian boolean true
 d-i grub-installer/bootdev string $IncDisk
-d-i grub-installer/force-efi-extra-removable boolean true
+d-i grub-installer/force-efi-extra-removable boolean false
 d-i finish-install/reboot_in_progress note
 d-i debian-installer/exit/reboot boolean true
 d-i preseed/late_command string	\
@@ -748,7 +749,7 @@ vnc
 skipx
 timezone --isUtc Asia/Kuala_Lumpur
 #ONDHCP network --bootproto=dhcp --onboot=on
-network --bootproto=static --ip=$IPv4 --netmask=$MASK --gateway=10.0.0.1 --nameserver=$ipDNS --onboot=on
+network --bootproto=static --ip=$IPv4 --netmask=$MASK --gateway=$GATE --nameserver=$ipDNS --onboot=on
 bootloader --location=mbr --append="rhgb quiet crashkernel=auto"
 zerombr
 clearpart --all --initlabel 
