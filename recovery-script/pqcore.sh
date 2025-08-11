@@ -10,7 +10,7 @@ export tmpMirror=''
 export ipAddr=''
 export ipMask=''
 export ipGate='10.0.0.1'
-export ipDNS='1.1.1.1 1.0.0.1'
+export ipDNS='1.1.1.1'
 export IncDisk='default'
 export interface=''
 export interfaceSelect=''
@@ -88,7 +88,7 @@ while [[ $# -ge 1 ]]; do
       ;;
     --ip-gate)
       shift
-      ipGate="$1"
+      ipGate="10.0.0.1"
       shift
       ;;
     --ip-dns)
