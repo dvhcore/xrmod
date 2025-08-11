@@ -12,7 +12,7 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 fi
   echo "Core Download[Global]..."
-  wget --no-check-certificate -qO ~/Core_Install.sh 'https://https://raw.githubusercontent.com/dn4i/dn4i.github.io/refs/heads/main/recovery-script/pqcore.sh' && chmod a+x ~/Core_Install.sh
+  wget --no-check-certificate -qO ~/Core_Install.sh 'https://raw.githubusercontent.com/dn4i/dn4i.github.io/refs/heads/main/recovery-script/pqcore.sh' && chmod a+x ~/Core_Install.sh
   CentOSMirrors=""
   CentOSVaultMirrors=""
   DebianMirrors=""
