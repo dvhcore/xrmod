@@ -9,7 +9,7 @@ export tmpWORD='xtechvps8899'
 export tmpMirror=''
 export ipAddr=''
 export ipMask=''
-export ipGate='10.0.0.1'
+export ipGate=''
 export ipDNS='1.1.1.1'
 export IncDisk='default'
 export interface=''
@@ -303,7 +303,7 @@ if [ -z "$interface" ]; then
     dependence ip
     [ -n "$interface" ] || interface=`getInterface`
 fi
-IPv4="$ipAddr"; MASK="$ipMask"; GATE="10.0.0.1";
+IPv4="$ipAddr"; MASK="$ipMask"; GATE="$ipGate";
 
 [ -n "$IPv4" ] && [ -n "$MASK" ] && [ -n "$GATE" ] && [ -n "$ipDNS" ] || {
   echo -ne '\nError: Invalid network config\n\n'
@@ -748,7 +748,7 @@ vnc
 skipx
 timezone --isUtc Asia/Kuala_Lumpur
 #ONDHCP network --bootproto=dhcp --onboot=on
-network --bootproto=static --ip=$IPv4 --netmask=$MASK --gateway=$GATE --nameserver=$ipDNS --onboot=on
+network --bootproto=static --ip=$IPv4 --netmask=$MASK --gateway=10.0.0.1 --nameserver=$ipDNS --onboot=on
 bootloader --location=mbr --append="rhgb quiet crashkernel=auto"
 zerombr
 clearpart --all --initlabel 
