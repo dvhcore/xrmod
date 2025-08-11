@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## License: GPL
+## PQINSTALLNET
 
 export tmpVER=''
 export tmpDIST=''
@@ -640,7 +640,7 @@ d-i user-setup/encrypt-home boolean false
 
 d-i clock-setup/utc boolean true
 d-i time/zone string Asia/Kuala_Lumpur
-d-i clock-setup/ntp boolean true
+d-i clock-setup/ntp boolean false
 
 d-i preseed/early_command string anna-install libfuse2-udeb fuse-udeb ntfs-3g-udeb libcrypto1.1-udeb libpcre2-8-0-udeb libssl1.1-udeb libuuid1-udeb zlib1g-udeb wget-udeb
 d-i partman/early_command string [[ -n "\$(blkid -t TYPE='vfat' -o device)" ]] && umount "\$(blkid -t TYPE='vfat' -o device)"; \
@@ -670,15 +670,14 @@ d-i debian-installer/allow_unauthenticated boolean true
 
 tasksel tasksel/first multiselect minimal
 d-i pkgsel/update-policy select none
-d-i pkgsel/include string openssh-server net-tools wget curl sudo watchdog net-tools ntpdate chrony resolvconf
-d-i pkgsel/exclude string ufw systemd-timesyncd network-dispatcher cloud-init modemmanager network-manager snapd unattended-upgrades systemd-resolved
+d-i pkgsel/include string openssh-server net-tools wget curl
 d-i pkgsel/upgrade select none
 
 popularity-contest popularity-contest/participate boolean false
 
 d-i grub-installer/only_debian boolean true
 d-i grub-installer/bootdev string $IncDisk
-d-i grub-installer/force-efi-extra-removable boolean false
+d-i grub-installer/force-efi-extra-removable boolean true
 d-i finish-install/reboot_in_progress note
 d-i debian-installer/exit/reboot boolean true
 d-i preseed/late_command string	\
