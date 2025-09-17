@@ -1,2 +1,2 @@
 [DEFAULT]
-allowipv6 = yes
+allowipv6 = auto
