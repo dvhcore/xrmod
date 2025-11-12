@@ -48,22 +48,6 @@ secs_to_human() {
 start=$(date +%s)
 
 #update
-rm /etc/apt/sources.list
-rm /etc/apt/sources.list.d/*
-cat > /etc/apt/sources.list <<-DEB11
-deb http://deb.debian.org/debian bookworm main contrib non-free-firmware
-deb-src http://deb.debian.org/debian bookworm main contrib non-free-firmware
-
-deb http://deb.debian.org/debian bookworm-updates main contrib non-free-firmware
-deb-src http://deb.debian.org/debian bookworm-updates main contrib non-free-firmware
-
-deb http://deb.debian.org/debian bookworm-backports main contrib non-free-firmware
-deb-src http://deb.debian.org/debian bookworm-backports main contrib non-free-firmware
-
-deb http://security.debian.org/debian-security/ bookworm-security main contrib non-free-firmware
-deb-src http://security.debian.org/debian-security/ bookworm-security main contrib non-free-firmware
-DEB11
-
 apt update -y
 apt full-upgrade -y
 apt dist-upgrade -y
