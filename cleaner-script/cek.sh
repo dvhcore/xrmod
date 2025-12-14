@@ -95,27 +95,27 @@ function display_users() {
             continue
         fi
 
-        echo -n > /tmp/ipxray
-        echo -n > /tmp/other
+        echo -n > /tmp/ipvless.txt
+        echo -n > /tmp/other.txt
 
         for ip in "${data2[@]}"; do
             local jum=$(grep -w "$akun" "$log_file" | tail -n 500 | awk '{print $3}' | sed 's/tcp://g' | cut -d ":" -f 1 | grep -w "$ip" | sort | uniq)
             if [[ "$jum" == "$ip" ]]; then
-                echo "$jum" >> /tmp/ipxray
+                echo "$jum" >> /tmp/ipvless.txt
             else
-                echo "$ip" >> /tmp/other
+                echo "$ip" >> /tmp/other.txt
             fi
         done
 
-        local jum=$(cat /tmp/ipxray)
+        local jum=$(cat /tmp/ipvless.txt)
         if [ -n "$jum" ]; then
-            local jum2=$(nl < /tmp/ipxray)
+            local jum2=$(nl < /tmp/ipvless.txt)
             echo -e "User: $akun"
             echo -e "$jum2"
             echo -e "${COLOR1}————————————————————————"
         fi
 
-        rm -f /tmp/ipxray /tmp/other
+        rm -f /tmp/ipvless.txt /tmp/other.txt
     done
 }
 
