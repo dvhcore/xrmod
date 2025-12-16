@@ -50,9 +50,9 @@ start=$(date +%s)
 apt update -y
 apt full-upgrade -y
 apt dist-upgrade -y
-apt install sudo -y
-apt install socat curl screen cron neofetch screenfetch netfilter-persistent vnstat  ntpdate systemd-timesyncd fail2ban -y
-apt-get --reinstall --fix-missing install -y bzip2 gzip coreutils wget screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl neofetch git lsof
+apt install sudo -y 
+apt install  dnsutils lsb-release socat curl screen xz-utils bash-completion neofetch screenfetch netfilter-persistent pwgen openssl netcat cron vnstat  ntpdate systemd-timesyncd fail2ban -y
+apt-get --reinstall --fix-missing install -y bzip2 gzip coreutils wget screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl cron neofetch git lsof
 apt-get remove --purge ufw firewalld -y
 apt-get remove --purge exim4 -y
 mkdir /backup
@@ -100,6 +100,8 @@ clear
 
 # set time GMT +8 Kuala Lumpur
 ntpdate pool.ntp.org
+timedatectl set-ntp true
+sleep 0.5
 ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
 clear
 
