@@ -469,6 +469,6 @@ if [ "$REDDIR" == "${REDDIR#[Yy]}" ]; then
 	clear
     menu
 else
-    rm -r setup.sh
+    rm -r install.sh
     reboot
 fi
