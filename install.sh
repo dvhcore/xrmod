@@ -47,12 +47,13 @@ secs_to_human() {
 }
 start=$(date +%s)
 
+#update
 apt update -y
 apt full-upgrade -y
 apt dist-upgrade -y
-apt install sudo -y 
-apt install  dnsutils lsb-release socat curl screen xz-utils bash-completion neofetch screenfetch netfilter-persistent pwgen openssl netcat cron vnstat  ntpdate systemd-timesyncd fail2ban -y
-apt-get --reinstall --fix-missing install -y bzip2 gzip coreutils wget screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl cron neofetch git lsof
+apt install sudo -y
+apt install socat curl screen cron neofetch screenfetch netfilter-persistent vnstat fail2ban -y
+apt-get --reinstall --fix-missing install -y bzip2 gzip coreutils wget screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl neofetch git lsof
 apt-get remove --purge ufw firewalld -y
 apt-get remove --purge exim4 -y
 mkdir /backup
@@ -62,14 +63,11 @@ clear
 # install resolvconf service
 apt install resolvconf -y
 
-#start resolvconf service
-systemctl enable resolvconf.service
-systemctl start resolvconf.service
-
-#set dns to google DNS
-echo "nameserver 1.1.1.1" >> /etc/resolv.conf
-echo "nameserver 1.1.1.1" >> /etc/resolvconf/resolv.conf.d/head
-systemctl restart resolvconf.service
+rm -rf /etc/resolv.conf
+cat > /etc/resolv.conf <<-RSV1
+nameserver 1.1.1.1
+nameserver 1.0.0.1
+RSV1
 
 # Make Folder Log XRAY
 mkdir -p /var/log/xray
@@ -82,7 +80,8 @@ mkdir -p /usr/local/etc/xray
 mkdir -p /usr/local/etc/xray/configlogs
 
 #Download XRAY Core v1.7.5.1 MSSVPN Custom
-wget -q -O /usr/local/bin/xray "https://github.com/dn4i/dn4i.github.io/releases/download/Dray-Mod1/xray-25.0.15-mod" && chmod 755 /usr/local/bin/xray
+curl -L https://github.com/mssvpn/Xray-core/releases/download/v1.7.5.1/Xray-linux-64.zip > Xray-linux-64.zip && unzip *.zip && mv xray /usr/local/bin && chmod +x /usr/local/bin/xray && rm *.zip *.dat LICENSE README.md
+
 
 #Server Info
 curl -s ipinfo.io/city >> /usr/local/etc/xray/city
@@ -99,10 +98,18 @@ sudo apt-get install speedtest
 clear
 
 # set time GMT +8 Kuala Lumpur
-ntpdate pool.ntp.org
-timedatectl set-ntp true
-sleep 0.5
 ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
+
+# set login banner
+wget -q -O /etc/issue.net "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/issues.net" && chmod +x /etc/issue.net
+echo "Banner /etc/issue.net" >>/etc/ssh/sshd_config
+
+# Install Nginx
+apt install nginx -y
+rm /var/www/html/*.html
+rm /etc/nginx/sites-enabled/default
+rm /etc/nginx/sites-available/default
+systemctl restart nginx
 clear
 
 # Insert Domain Features
@@ -267,7 +274,7 @@ END
 cat> /etc/systemd/system/xray@.service << END
 [Unit]
 Description=Xray Service
-Documentation=https://t.me/dnbizowner https://github.com/XTLS/Xray-core
+Documentation=https://t.me/Vinstechmy https://github.com/XTLS/Xray-core
 After=network.target nss-lookup.target
 
 [Service]
@@ -275,7 +282,7 @@ User=root
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
-ExecStart=/usr/local/bin/xray2 run -config /usr/local/etc/xray/%i.json
+ExecStart=/usr/local/bin/xray run -config /usr/local/etc/xray/%i.json
 Restart=on-failure
 RestartSec=3s
 RestartPreventExitStatus=23
@@ -286,11 +293,6 @@ LimitNOFILE=1000000
 WantedBy=multi-user.target
 
 END
-
-echo -e "[ ${YB}INFO${NC} ] Restart Daemon Service"
-echo ""
-systemctl daemon-reload
-sleep 1
 
 # enable xray ws tls
 echo -e "[ ${GB}OK${NC} ] Restarting XRAY Core Service"
@@ -331,32 +333,36 @@ echo ""
 sleep 1
 
 #MENU
-wget -O /usr/bin/menu "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/MENU/menu.sh" && chmod +x /usr/bin/menu
-wget -O /usr/bin/menu-vless "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/MENU/menu-vless.sh" && chmod +x /usr/bin/menu-vless
-wget -O /usr/bin/backupmenu "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/MENU/backupmenu.sh" && chmod +x /usr/bin/backupmenu
+wget -O /usr/bin/menu "${Git_Profile}/MENU/menu.sh" && chmod +x /usr/bin/menu
+wget -O /usr/bin/menu-vless "${Git_Profile}/MENU/menu-vless.sh" && chmod +x /usr/bin/menu-vless
+wget -O /usr/bin/backupmenu "${Git_Profile}/MENU/backupmenu.sh" && chmod +x /usr/bin/backupmenu
 
 #XRAY
-wget -O /usr/bin/add-vless "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/XRAY/add-vless.sh" && chmod +x /usr/bin/add-vless
-wget -O /usr/bin/del-vless "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/XRAY/del-vless.sh" && chmod +x /usr/bin/del-vless
-wget -O /usr/bin/cek-vless "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/XRAY/cek-vless.sh" && chmod +x /usr/bin/cek-vless
-wget -O /usr/bin/renew-vless "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/XRAY/renew-vless.sh" && chmod +x /usr/bin/renew-vless
-wget -O /usr/bin/user-vless "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/XRAY/user-vless.sh" && chmod +x /usr/bin/user-vless
-wget -O /usr/bin/trial-vless "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/XRAY/trial-vless.sh" && chmod +x /usr/bin/trial-vless
+wget -O /usr/bin/add-vless "${Git_Profile}/XRAY/add-vless.sh" && chmod +x /usr/bin/add-vless
+wget -O /usr/bin/del-vless "${Git_Profile}/XRAY/del-vless.sh" && chmod +x /usr/bin/del-vless
+wget -O /usr/bin/cek-vless "${Git_Profile}/XRAY/cek-vless.sh" && chmod +x /usr/bin/cek-vless
+wget -O /usr/bin/renew-vless "${Git_Profile}/XRAY/renew-vless.sh" && chmod +x /usr/bin/renew-vless
+wget -O /usr/bin/user-vless "${Git_Profile}/XRAY/user-vless.sh" && chmod +x /usr/bin/user-vless
+wget -O /usr/bin/trial-vless "${Git_Profile}/XRAY/trial-vless.sh" && chmod +x /usr/bin/trial-vless
 
 
 #OTHERS
-wget -O /usr/bin/limit "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/limit-speed.sh" && chmod +x /usr/bin/limit
-wget -O /usr/bin/add-host "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/add-host.sh" && chmod +x /usr/bin/add-host
-wget -O /usr/bin/cekport "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/cekport.sh" && chmod +x /usr/bin/cekport
-wget -O /usr/bin/certxray "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/certxray.sh" && chmod +x /usr/bin/certxray
-wget -O /usr/bin/dns "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/dns.sh" && chmod +x /usr/bin/dns
-wget -O /usr/bin/get-backres "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/get-backres.sh" && chmod +x /usr/bin/get-backres
-wget -O /usr/bin/restart "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/restart.sh" && chmod +x /usr/bin/restart
-wget -O /usr/bin/status "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/status.sh" && chmod +x /usr/bin/status
-wget -O /usr/bin/cleaner "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/logcleaner.sh" && chmod +x /usr/bin/cleaner
-wget -O /usr/bin/xp "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/xp.sh" && chmod +x /usr/bin/xp
-wget -O /usr/bin/ram "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/ram.sh" && chmod +x /usr/bin/ram
+wget -O /usr/bin/limit "${Git_Profile}/OTHERS/limit-speed.sh" && chmod +x /usr/bin/limit
+wget -O /usr/bin/add-host "${Git_Profile}/OTHERS/add-host.sh" && chmod +x /usr/bin/add-host
+wget -O /usr/bin/cekport "${Git_Profile}/OTHERS/cekport.sh" && chmod +x /usr/bin/cekport
+wget -O /usr/bin/certxray "${Git_Profile}/OTHERS/certxray.sh" && chmod +x /usr/bin/certxray
+wget -O /usr/bin/dns "${Git_Profile}/OTHERS/dns.sh" && chmod +x /usr/bin/dns
+wget -O /usr/bin/get-backres "${Git_Profile}/OTHERS/get-backres.sh" && chmod +x /usr/bin/get-backres
+wget -O /usr/bin/restart "${Git_Profile}/OTHERS/restart.sh" && chmod +x /usr/bin/restart
+wget -O /usr/bin/status "${Git_Profile}/OTHERS/status.sh" && chmod +x /usr/bin/status
+wget -O /usr/bin/cleaner "${Git_Profile}/OTHERS/logcleaner.sh" && chmod +x /usr/bin/cleaner
+wget -O /usr/bin/xp "${Git_Profile}/OTHERS/xp.sh" && chmod +x /usr/bin/xp
+wget -O /usr/bin/ram "${Git_Profile}/OTHERS/ram.sh" && chmod +x /usr/bin/ram
 wget -O /usr/bin/nf "https://raw.githubusercontent.com/vinstechmy/MediaUnlockerTest/main/media.sh" && chmod +x /usr/bin/nf
+
+
+# Installing RAM & CPU Monitor
+#curl https://raw.githubusercontent.com/xxxserxxx/gotop/master/scripts/download.sh | bash && chmod +x gotop && sudo mv gotop /usr/local/bin/
 
 echo -e "[ ${GB}INFO${NC} ] Autoscript Files Successfully Download !"
 echo ""
@@ -379,18 +385,6 @@ fi
 
 systemctl restart cron
 systemctl restart sshd
-
-#Install Rclone
-apt install rclone
-printf "q\n" | rclone config
-wget -O /root/.config/rclone/rclone.conf "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/rclone.conf" >/dev/null 2>&1
-
-#Install Wondershape for limit bandwith
-git clone  https://github.com/MrMan21/wondershaper.git
-cd wondershaper
-make install
-cd
-rm -rf wondershaper
 
 cat > /root/.profile << END
 # ~/.profile: executed by Bourne-compatible login shells.
