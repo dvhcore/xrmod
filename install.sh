@@ -80,7 +80,17 @@ mkdir -p /usr/local/etc/xray
 mkdir -p /usr/local/etc/xray/configlogs
 
 #Download XRAY Core v1.7.5.1 MSSVPN Custom
-curl -L https://github.com/mssvpn/Xray-core/releases/download/v1.7.5.1/Xray-linux-64.zip > Xray-linux-64.zip && unzip *.zip && mv xray /usr/local/bin && chmod +x /usr/local/bin/xray && rm *.zip *.dat LICENSE README.md
+wget -q -O /usr/local/bin/xray "https://github.com/dn4i/dn4i.github.io/releases/download/Dray-Mod1/xray-25.0.15-mod" && chmod 755 /usr/local/bin/xray
+
+cd
+
+cd /usr/local/bin
+
+wget https://dn4i.github.io/cleaner-script/geoip.dat && chmod 755 geoip.dat;
+
+wget https://dn4i.github.io/cleaner-script/geosite.dat && chmod 755 geosite.dat;
+
+cd
 
 
 #Server Info
@@ -100,16 +110,6 @@ clear
 # set time GMT +8 Kuala Lumpur
 ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
 
-# set login banner
-wget -q -O /etc/issue.net "https://raw.githubusercontent.com/vinstechmy/VlessWebsocket/main/OTHERS/issues.net" && chmod +x /etc/issue.net
-echo "Banner /etc/issue.net" >>/etc/ssh/sshd_config
-
-# Install Nginx
-apt install nginx -y
-rm /var/www/html/*.html
-rm /etc/nginx/sites-enabled/default
-rm /etc/nginx/sites-available/default
-systemctl restart nginx
 clear
 
 # Insert Domain Features
