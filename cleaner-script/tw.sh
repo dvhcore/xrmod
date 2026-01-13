@@ -51,6 +51,14 @@ CT11
 
 sudo ln -s /etc/sysctl.conf /etc/sysctl.d/99-sysctl.conf
 
+chattr -i /etc/resolv.conf
+ 
+rm -rf /etc/resolv.conf
+cat > /etc/resolv.conf <<-RSV1
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+RSV1
+
 clear
 
 reboot
