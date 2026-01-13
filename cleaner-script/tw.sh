@@ -6,8 +6,7 @@ cat > /etc/rc.local <<-END
 # rc.local
 # nano /etc/rc.local
 # By default this script does nothing.
-echo 1 > /proc/sys/net/ipv6/conf/default/disable_ipv6
-echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
+echo 0 > /proc/sys/net/ipv6/conf/all/disable_ipv6
 iptables -I INPUT -p udp --dport 5300 -j ACCEPT
 iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 5300
 systemctl restart netfilter-persistent
@@ -23,9 +22,9 @@ systemctl restart rc-local.service
 clear
 
 cat > /etc/sysctl.conf <<-CT11
-net.ipv6.conf.all.disable_ipv6 = 1
-net.ipv6.conf.default.disable_ipv6 = 1
-net.ipv6.conf.lo.disable_ipv6 = 1
+net.ipv6.conf.all.disable_ipv6 = 0
+net.ipv6.conf.default.disable_ipv6 = 0
+net.ipv6.conf.lo.disable_ipv6 = 0
 fs.file-max = 65535
 net.netfilter.nf_conntrack_max = 262144
 net.netfilter.nf_conntrack_tcp_timeout_time_wait = 30
