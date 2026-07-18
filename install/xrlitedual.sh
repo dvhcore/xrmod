@@ -1,7 +1,10 @@
 #!/bin/bash
 # =========================================
-# Xr Install With Dual Core Split
-# Xr Support Multi Path
+# Vless Websocket By Vinstechmy
+# Support Custom/Multipath For Vless WS
+# Version    : 1.0
+# Script By  : Vinstechmy
+# (C) Copyright 2025 By Vinstechmy
 # =========================================
 clear
 #Color
@@ -52,7 +55,7 @@ apt install sudo -y
 
 #Install Update & Dependencies
 apt install curl socat xz-utils zip pwgen openssl wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release cron bash-completion net-tools -y
-apt install sudo git make htop resolvconf dnsutils lsb-release socat curl screen xz-utils bash-completion screenfetch pwgen openssl cron vnstat nano iptables -y
+apt install sudo git make htop resolvconf dnsutils lsb-release socat curl screen xz-utils bash-completion screenfetch pwgen openssl cron vnstat fail2ban nano iptables -y
 
 #Automate Iptables Setting
 echo "iptables-persistent iptables-persistent/autosave_v4 boolean false" | sudo debconf-set-selections
@@ -64,6 +67,7 @@ apt-get install iptables-persistent netfilter-persistent -y
 #setting resolvconf
 systemctl disable systemd-resolved
 
+rm -rf /etc/resolv.conf
 cat > /etc/resolv.conf <<-RSV1
 nameserver 1.1.1.1
 nameserver 1.0.0.1
@@ -325,25 +329,7 @@ cat > /usr/local/etc/xray/outbounds.json <<OUTB
      {
        "tag": "blocked",
        "protocol": "blackhole"
-     },
-     {
-       "tag": "socks-dyno",
-       "protocol": "socks",
-       "settings": {
-         "servers": [
-           {
-             "address": "43.245.62.139",
-             "port": 10080,
-             "users": [
-              {
-                "pass": "dvh424x",
-                "user": "dvh424x"
-              }
-            ]
-          }
-        ]
-      }
-    }
+     }
   ]
 }
 OUTB
