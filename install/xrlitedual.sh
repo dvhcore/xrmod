@@ -1,10 +1,6 @@
 #!/bin/bash
 # =========================================
-# Vless Websocket By Vinstechmy
-# Support Custom/Multipath For Vless WS
-# Version    : 1.0
-# Script By  : Vinstechmy
-# (C) Copyright 2025 By Vinstechmy
+# Xr Lite Dual
 # =========================================
 clear
 #Color
