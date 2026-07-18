@@ -837,7 +837,7 @@ if [ ! -f "/etc/cron.d/cleanall" ]; then
 cat> /etc/cron.d/cleanall << CLALL
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-0 * * * * /usr/bin/cleanall
+0 * * * * root /usr/bin/cleanall
 CLALL
 fi
 
